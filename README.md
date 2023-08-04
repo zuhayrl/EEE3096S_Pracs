@@ -1,2 +1,2 @@
 # EEE3096S_Pracs
-A repo for a third year Embedded systems course.
+A repo for a third-year Embedded systems course.
