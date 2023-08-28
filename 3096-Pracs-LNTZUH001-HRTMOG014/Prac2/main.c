@@ -53,8 +53,7 @@ TIM_HandleTypeDef htim16;
 
 /* USER CODE BEGIN PV */
 // TODO: Define any input variables
-static uint8_t patterns[] = {0b10101010, 0b01010101, 0b11001100, 0b00110011, 0b11110000, 0b00001111}; //create array of patterns
-//set x and y
+static uint8_t patterns[] = {0b10101010, 0b01010101, 0b11001100, 0b00110011, 0b11110000, 0b00001111};// creates an array of 6 to create patterns on board
 uint16_t x =0;
 int y = 0;
 
@@ -108,12 +107,12 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // TODO: Start timer TIM16
-HAL_TIM_Base_Start_IT(&htim16); //start timer in interrupt mode
+HAL_TIM_Base_Start_IT(&htim16); //enables timer start in interrupt mode
 
   // TODO: Write all "patterns" to EEPROM using SPI
 for (int i=0;i<6;i=i+1)
 {
-	write_to_address(i,patterns[i]); //loop through array to write each pattern
+	write_to_address(i,patterns[i]);// write
 }
 
   /* USER CODE END 2 */
@@ -444,17 +443,17 @@ void TIM16_IRQHandler(void)
 	HAL_TIM_IRQHandler(&htim16);
 
 	// TODO: Change to next LED pattern; output 0x01 if the read SPI data is incorrect
+	GPIOB->ODR &= read_from_address(x);  //clear the memory before going to next iteration
 	if (x>5){
-		x=0;
+		x=0; // checks to see if addresses in
 	};
     if(read_from_address(x)==patterns[x]){
-		GPIOB->ODR |= read_from_address(x);
-		GPIOB->ODR &= read_from_address(x);
+		GPIOB->ODR |= read_from_address(x);// sends data to pins
+
 		x=x+1;
 }
 else{
-	GPIOB->ODR |= 0b00000001;
-	GPIOB->ODR &=  0b00000001;
+	GPIOB->ODR |= 0b00000001; //indicates failure
 }
 
 
@@ -462,7 +461,7 @@ else{
 }
 /* USER CODE END 4 */
 int checkPB(void){
-	if ((GPIOA -> IDR & GPIO_IDR_0)==0){
+	if ((GPIOA -> IDR & GPIO_IDR_0)==0){//created function to chec if input to IDR is 1 or 0
 		return 1;
 	}
 	else{
